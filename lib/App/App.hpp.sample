@@ -1,0 +1,15 @@
+#ifndef __APP_HPP__
+#define __APP_HPP__
+
+#define HOSTNAME "esp32cam01"
+
+#define WIFI_SSID "<your wifi ssid>"
+#define WIFI_PASS "<your wifi password>"
+
+#define APP_NAME "ESP32 Camera - Arduino"
+#define APP_VERSION "1.0.2"
+
+#define TIMEZONE "CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00"
+#define NTP_SERVER "<your ntp server>"
+
+#endif
