@@ -23,6 +23,13 @@ language: python
 python:
   - "2.7"
 
+notifications:
+  email:
+    recipients:
+      - t.ludewig@gmail.com
+    on_success: always
+    on_failure: always
+
 sudo: false
 cache:
   directories:
