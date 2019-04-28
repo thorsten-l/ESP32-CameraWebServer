@@ -8,7 +8,9 @@ static time_t lastTimestamp = 0;
 
 void setup() {
   pinMode( BOARD_LED, OUTPUT );
+  pinMode( FLASH_LED, OUTPUT );
   digitalWrite( BOARD_LED, true );  
+  digitalWrite( FLASH_LED, false );  
   Serial.begin(115200);
   delay( 3000 ); // wait for serial monitor
   Serial.setDebugOutput(true);
@@ -21,7 +23,9 @@ void setup() {
 
   initializeCamera();
 
+  digitalWrite( FLASH_LED, true );  
   disableWiFi();
+  digitalWrite( FLASH_LED, false );  
   connectWiFi();
 
   startCameraServer();
