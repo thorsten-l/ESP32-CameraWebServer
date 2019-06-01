@@ -4,8 +4,6 @@
 #include <CameraSetup.h>
 #include <CameraServer.h>
 
-static time_t lastTimestamp = 0;
-
 void setup() {
   pinMode( BOARD_LED, OUTPUT );
   pinMode( FLASH_LED, OUTPUT );
@@ -37,15 +35,9 @@ void setup() {
 
 void loop()
 {
-  time_t currentTimestamp = millis();
-
-  if (( currentTimestamp - lastTimestamp >= 5000 )) // check every 5s
+  if( WiFi.isConnected() == false )
   {
-    lastTimestamp = currentTimestamp;
-
-    if( WiFi.isConnected() == false )
-    {
-      connectWiFi();
-    }
+    connectWiFi();
   }
+  delay(10000);
 }

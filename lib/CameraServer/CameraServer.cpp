@@ -15,15 +15,12 @@
 #include "esp_timer.h"
 #include "esp_camera.h"
 #include "img_converters.h"
-#include "IndexPage.h"
+#include "camera_index.h"
 #include "Arduino.h"
 
 #include "fb_gfx.h"
 #include "fd_forward.h"
-#include "dl_lib.h"
 #include "fr_forward.h"
-
-#include "CameraServer.h"
 
 #define ENROLL_CONFIRM_TIMES 5
 #define FACE_ID_SAVE_NUMBER 7
@@ -434,8 +431,6 @@ static esp_err_t stream_handler(httpd_req_t *req){
         last_frame = fr_end;
         frame_time /= 1000;
         uint32_t avg_frame_time = ra_filter_run(&ra_filter, frame_time);
-
-        #ifndef STREAM_INFO_DISABLED
         Serial.printf("MJPG: %uB %ums (%.1ffps), AVG: %ums (%.1ffps), %u+%u+%u+%u=%u %s%d\n",
             (uint32_t)(_jpg_buf_len),
             (uint32_t)frame_time, 1000.0 / (uint32_t)frame_time,
@@ -443,7 +438,6 @@ static esp_err_t stream_handler(httpd_req_t *req){
             (uint32_t)ready_time, (uint32_t)face_time, (uint32_t)recognize_time, (uint32_t)encode_time, (uint32_t)process_time,
             (detected)?"DETECTED ":"", face_id
         );
-        #endif
     }
 
     last_frame = 0;
@@ -549,6 +543,7 @@ static esp_err_t status_handler(httpd_req_t *req){
     p+=sprintf(p, "\"brightness\":%d,", s->status.brightness);
     p+=sprintf(p, "\"contrast\":%d,", s->status.contrast);
     p+=sprintf(p, "\"saturation\":%d,", s->status.saturation);
+    p+=sprintf(p, "\"sharpness\":%d,", s->status.sharpness);
     p+=sprintf(p, "\"special_effect\":%u,", s->status.special_effect);
     p+=sprintf(p, "\"wb_mode\":%u,", s->status.wb_mode);
     p+=sprintf(p, "\"awb\":%u,", s->status.awb);
@@ -581,7 +576,11 @@ static esp_err_t status_handler(httpd_req_t *req){
 static esp_err_t index_handler(httpd_req_t *req){
     httpd_resp_set_type(req, "text/html");
     httpd_resp_set_hdr(req, "Content-Encoding", "gzip");
-    return httpd_resp_send(req, (const char *)index_html_gz, index_html_gz_len);
+    sensor_t * s = esp_camera_sensor_get();
+    if (s->id.PID == OV3660_PID) {
+        return httpd_resp_send(req, (const char *)index_ov3660_html_gz, index_ov3660_html_gz_len);
+    }
+    return httpd_resp_send(req, (const char *)index_ov2640_html_gz, index_ov2640_html_gz_len);
 }
 
 void startCameraServer(){
