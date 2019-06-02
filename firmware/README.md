@@ -6,7 +6,7 @@ precompiled firmware in this directory.
 ## Predefined WiFi Network
 
 - SSID: IoT
-- Password: HelloIot123
+- Password: HelloIoT123
 
 ---
 
