@@ -16,11 +16,14 @@ void connectWiFi()
 {
   Serial.print("\nConnecting to WiFi network: " WIFI_SSID " " );
 
-  WiFi.persistent(true);
-  WiFi.setHostname( HOSTNAME );
+  WiFi.mode(WIFI_OFF);
+  WiFi.disconnect(true,true);
+  delay(2000);
+
+  WiFi.begin();
+  WiFi.setHostname(HOSTNAME);
   WiFi.mode(WIFI_STA);
-  WiFi.setHostname( HOSTNAME );
-  WiFi.begin( WIFI_SSID, WIFI_PASS );
+  WiFi.begin(WIFI_SSID, WIFI_PASS);
 
   while (WiFi.status() != WL_CONNECTED)
   {

@@ -4,6 +4,8 @@
 #include <CameraSetup.h>
 #include <CameraServer.h>
 
+time_t checkTimestamp = 0l;
+
 void setup() {
   pinMode( BOARD_LED, OUTPUT );
   pinMode( FLASH_LED, OUTPUT );
@@ -21,9 +23,9 @@ void setup() {
 
   initializeCamera();
 
-  digitalWrite( FLASH_LED, true );  
+  // digitalWrite( FLASH_LED, true );  
   disableWiFi();
-  digitalWrite( FLASH_LED, false );  
+  // digitalWrite( FLASH_LED, false );  
   connectWiFi();
 
   startCameraServer();
@@ -35,9 +37,15 @@ void setup() {
 
 void loop()
 {
-  if( WiFi.isConnected() == false )
+  time_t currentTimestamp = millis();
+
+  if (( currentTimestamp - checkTimestamp ) >= 10000 )
   {
-    connectWiFi();
+    if( WiFi.isConnected() == false )
+    {
+      connectWiFi();
+    }
+    checkTimestamp = currentTimestamp;
   }
-  delay(10000);
+  delay(25);
 }
